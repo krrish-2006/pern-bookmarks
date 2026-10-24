@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 function App() {
   const [bookmarks, setBookmarks] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -30,7 +30,7 @@ function App() {
 
   async function fetchCategories() {
     try {
-      const res = await fetch("http://localhost:3000/categories");
+      const res = await fetch(`${API_URL}/categories`);
       if (!res.ok) throw new Error("Failed to fetch categories");
       const data = await res.json();
       setCategories(data);
@@ -42,11 +42,13 @@ function App() {
   async function addBookmark(e) {
     e.preventDefault();
     try {
-      const res = await fetch("http://localhost:3000/bookmarks", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, url, category_id }),
-      });
+      const res = await fetch(
+        `${API_URL}/bookmarks`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ title, url, category_id }),
+        },
+      );
       if (!res.ok) throw new Error("Failed to add bookmark");
       const newBookmark = await res.json();
       setBookmarks([...bookmarks, newBookmark]);
@@ -60,7 +62,7 @@ function App() {
 
   async function deleteBookmark(id) {
     try {
-      const res = await fetch(`http://localhost:3000/bookmarks/${id}`, {
+      const res = await fetch(`${API_URL}/bookmarks/${id}`, {
         method: "DELETE",
       });
       if (!res.ok) throw new Error("Failed to delete");
