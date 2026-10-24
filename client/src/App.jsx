@@ -1,5 +1,9 @@
 import { useState, useEffect } from "react";
+import BookmarkCard from "./components/BookmarkCard";
+import BookmarkForm from "./components/BookmarkForm";
+
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
 function App() {
   const [bookmarks, setBookmarks] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -80,75 +84,23 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center pt-10 px-4">
-      <form
+      {/* Replace the giant form with this! */}
+      <BookmarkForm
+        title={title}
+        setTitle={setTitle}
+        url={url}
+        setUrl={setUrl}
+        category_id={category_id}
+        setCategory_id={setCategory_id}
+        categories={categories}
         onSubmit={addBookmark}
-        className="bg-white p-6 rounded-lg shadow-md w-full max-w-md flex flex-col gap-4"
-      >
-        <input
-          type="text"
-          placeholder="Website Name "
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="border p-2 rounded"
-          required
-        />
-        <input
-          type="text"
-          placeholder="Website Url"
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
-          className="border p-2 rounded"
-          required
-        />
-        <select
-          value={category_id}
-          onChange={(e) => setCategory_id(e.target.value)}
-          className="border p-2 rounded"
-          required
-        >
-          <option value="">Select a Category</option>
-          {categories.map((cat) => (
-            <option key={cat.id} value={cat.id}>
-              {cat.name}
-            </option>
-          ))}
-        </select>
-        <button
-          type="submit"
-          className="bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
-        >
-          Add Bookmark
-        </button>
-      </form>
+      />
+
       <div className="mt-8 w-full max-w-md flex flex-col gap-4">
         {loading && <p>Loading...</p>}
         {error && <p className="text-red-500">{error}</p>}
         {bookmarks.map((b) => (
-          <div
-            key={b.id}
-            className="bg-white p-4 rounded-lg shadow flex justify-between items-center"
-          >
-            <div>
-              <h2 className="font-bold text-lg">{b.title}</h2>
-              <a
-                href={`https://${b.url}`}
-                target="_blank"
-                rel="noreferrer"
-                className="text-blue-500 hover:underline"
-              >
-                {b.url}
-              </a>
-              <span className="block text-sm text-gray-500 mt-1">
-                {b.category}
-              </span>
-            </div>
-            <button
-              onClick={() => deleteBookmark(b.id)}
-              className="text-red-500 font-bold hover:text-red-700"
-            >
-              X
-            </button>
-          </div>
+          <BookmarkCard key={b.id} bookmark={b} onDelete={deleteBookmark} />
         ))}
       </div>
     </div>
