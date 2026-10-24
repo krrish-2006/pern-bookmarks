@@ -41,21 +41,29 @@ function App() {
 
   async function addBookmark(e) {
     e.preventDefault();
-    try {
-      const res = await fetch(`${API_URL}/bookmarks`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, url, category_id }),
-      });
-      if (!res.ok) throw new Error("Failed to add bookmark");
-      const newBookmark = await res.json();
-      setBookmarks([...bookmarks, newBookmark]);
-      setTitle("");
-      setUrl("");
-      setCategory_id("");
-    } catch (err) {
-      setError(err.message);
+    if (!title || !url || !category_id){
+      alert("Please fill in all fields before adding a bookmark.");
+      return;
     }
+    if (!url.includes(".")){
+      alert("Please enter a valid website URL (e.g., google.com).");
+      return;
+    }
+      try {
+        const res = await fetch(`${API_URL}/bookmarks`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ title, url, category_id }),
+        });
+        if (!res.ok) throw new Error("Failed to add bookmark");
+        const newBookmark = await res.json();
+        setBookmarks([...bookmarks, newBookmark]);
+        setTitle("");
+        setUrl("");
+        setCategory_id("");
+      } catch (err) {
+        setError(err.message);
+      }
   }
 
   async function deleteBookmark(id) {
@@ -78,10 +86,11 @@ function App() {
       >
         <input
           type="text"
-          placeholder="Website Name"
+          placeholder="Website Name "
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           className="border p-2 rounded"
+          required
         />
         <input
           type="text"
@@ -89,11 +98,13 @@ function App() {
           value={url}
           onChange={(e) => setUrl(e.target.value)}
           className="border p-2 rounded"
+          required
         />
         <select
           value={category_id}
           onChange={(e) => setCategory_id(e.target.value)}
           className="border p-2 rounded"
+          required
         >
           <option value="">Select a Category</option>
           {categories.map((cat) => (

@@ -9,10 +9,14 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+const isProduction = process.env.DATABASE_URL?.includes("supabase");
+
 const pool = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }, // Add this line!
+  // Only use SSL if we are connecting to Supabase
+  ssl: isProduction ? { rejectUnauthorized: false } : false,
 });
+
 // ROUTES GO HERE
 //GET
 app.get("/categories", async (req, res) => {
