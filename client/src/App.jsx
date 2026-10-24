@@ -16,7 +16,7 @@ function App() {
   async function fetchBookmarks() {
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:3000/bookmarks");
+      const res = await fetch(`${API_URL}/bookmarks`);
       if (!res.ok) throw new Error("Failed to fetch bookmarks");
       const data = await res.json();
       setBookmarks(data);
@@ -42,13 +42,11 @@ function App() {
   async function addBookmark(e) {
     e.preventDefault();
     try {
-      const res = await fetch(
-        `${API_URL}/bookmarks`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ title, url, category_id }),
-        },
-      );
+      const res = await fetch(`${API_URL}/bookmarks`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title, url, category_id }),
+      });
       if (!res.ok) throw new Error("Failed to add bookmark");
       const newBookmark = await res.json();
       setBookmarks([...bookmarks, newBookmark]);
