@@ -17,3 +17,4 @@ A full-stack bookmark manager application where users can save, categorize, and 
 - Delete bookmarks.
 - Relational database setup (One-to-Many: Categories to Bookmarks).
 - Responsive UI styled with Tailwind CSS.
+- User Authentication (JWT)
